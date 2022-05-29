@@ -84,9 +84,6 @@
       },
       "url": "https://packages.unity.com"
     },
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     "com.unity.burst": {
       "version": "1.5.6",
       "depth": 2,
@@ -96,12 +93,6 @@
       },
       "url": "https://packages.unity.com"
     },
-=======
->>>>>>> parent of e4410f8 (brand new lvl)
-=======
->>>>>>> parent of e4410f8 (brand new lvl)
-=======
->>>>>>> parent of e4410f8 (brand new lvl)
     "com.unity.collab-proxy": {
       "version": "1.9.0",
       "depth": 0,
@@ -148,9 +139,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     "com.unity.services.core": {
       "version": "1.0.1",
       "depth": 1,
@@ -160,12 +148,6 @@
       },
       "url": "https://packages.unity.com"
     },
-=======
->>>>>>> parent of e4410f8 (brand new lvl)
-=======
->>>>>>> parent of e4410f8 (brand new lvl)
-=======
->>>>>>> parent of e4410f8 (brand new lvl)
     "com.unity.test-framework": {
       "version": "1.1.29",
       "depth": 0,
