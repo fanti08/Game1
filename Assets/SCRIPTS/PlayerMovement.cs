@@ -24,7 +24,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float coyoteTime = .2f;
     [SerializeField] private float coyoteCounter;
     [Header("ANIMATIONS")]
-    [SerializeField] private Animator anim;
+    [SerializeField] private GameObject idle;
+    [SerializeField] private GameObject side;
 
 
     //VOIDS
@@ -32,8 +33,9 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
-        anim = GameObject.Find("Sprites").GetComponent<Animator>();
         ground = LayerMask.GetMask("Ground");
+        idle = GameObject.Find("Player_Idle");
+        side = GameObject.Find("Player_Side");
     }
 
     private void Update()
@@ -117,7 +119,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             coyoteCounter -= Time.deltaTime;
-            rb.gravityScale = 3;
+            rb.gravityScale = 4;
         }
     }
 
@@ -125,17 +127,17 @@ public class PlayerMovement : MonoBehaviour
     {
         if (shift)
         {
-            GameObject.Find("Sprites").transform.localScale = new Vector3(1, .5f, 1);
-            GameObject.Find("Sprites").transform.localPosition = new Vector3(0, -5.125f - 7 / 6, 0);
+            idle.transform.localScale = new Vector3(1, .5f, 1);
+            idle.transform.localPosition = new Vector3(0, -5.125f - 7 / 6, 0);
             bc.size = new Vector2(6, 7.5f);
             _maxSpeed = maxSpeed / 4;
-            _jumpForce = jumpForce / 1.5f;
+            _jumpForce = jumpForce / 1.3f;
             bc.offset = new Vector2(0, -3.725f);
         }
         else if (!hasSmthAboveHead)
         {
-            GameObject.Find("Sprites").transform.localScale = new Vector3(1, 1, 1);
-            GameObject.Find("Sprites").transform.localPosition = new Vector3(0, -5.125f, 0);
+            idle.transform.localScale = new Vector3(1, 1, 1);
+            idle.transform.localPosition = new Vector3(0, -5.125f, 0);
             bc.size = new Vector2(6, 15);
             _maxSpeed = maxSpeed;
             _jumpForce = jumpForce;
