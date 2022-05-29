@@ -232,8 +232,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121332969}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 9.12, y: -1.2841, z: 0}
   m_LocalScale: {x: 3.2493584, y: 6.3440638, z: 1}
+=======
+  m_LocalPosition: {x: 5.96, y: -3.35, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+>>>>>>> parent of e4410f8 (brand new lvl)
   m_Children: []
   m_Father: {fileID: 1379714021}
   m_RootOrder: 3
@@ -425,8 +430,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 352793216}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 3.56, y: -6.77, z: 0}
   m_LocalScale: {x: 14.338717, y: 1, z: 1}
+=======
+  m_LocalPosition: {x: 3.6528, y: -4.66, z: 0}
+  m_LocalScale: {x: 2.7656, y: 1, z: 1}
+>>>>>>> parent of e4410f8 (brand new lvl)
   m_Children: []
   m_Father: {fileID: 1379714021}
   m_RootOrder: 2
@@ -578,21 +588,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacb1804bf1cc004fbd690c871752331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
   rb: {fileID: 437993895}
   bc: {fileID: 437993897}
   ground:
     serializedVersion: 2
     m_Bits: 0
+=======
+  rb: {fileID: 0}
+  bc: {fileID: 0}
+>>>>>>> parent of e4410f8 (brand new lvl)
   currentHorizontalSpeed: 0
   currentVerticalSpeed: 0
   isGrounded: 0
   hasSmthAboveHead: 0
   wasGoingRight: 0
+  wasGoingRightBeforeJumping: 0
   maxSpeed: 15
   jumpForce: 16.5
   _maxSpeed: 0
   _jumpForce: 0
-  horizontalInput: 0
+  A: 0
+  D: 0
   space: 0
   shift: 0
   coyoteTime: 0.2
@@ -900,7 +917,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 646518164}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.89, y: 0.05, z: 0}
+  m_LocalPosition: {x: -2.24, y: -2.8899999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1379714021}
@@ -1010,8 +1027,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 659423871}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 16.1641, y: 9.0332, z: 0}
   m_LocalScale: {x: 4.6866627, y: 42.008793, z: 1}
+=======
+  m_LocalPosition: {x: 17.32, y: -4.31, z: 0}
+  m_LocalScale: {x: 1, y: 5.2, z: 1}
+>>>>>>> parent of e4410f8 (brand new lvl)
   m_Children: []
   m_Father: {fileID: 1379714021}
   m_RootOrder: 6
@@ -1094,6 +1116,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+<<<<<<< HEAD
 --- !u!1 &775237858
 GameObject:
   m_ObjectHideFlags: 0
@@ -1424,6 +1447,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+=======
+>>>>>>> parent of e4410f8 (brand new lvl)
 --- !u!1 &1015734913
 GameObject:
   m_ObjectHideFlags: 0
@@ -1507,6 +1532,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+<<<<<<< HEAD
 --- !u!1 &1061981335
 GameObject:
   m_ObjectHideFlags: 0
@@ -1617,6 +1643,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+=======
+>>>>>>> parent of e4410f8 (brand new lvl)
 --- !u!1 &1072452935
 GameObject:
   m_ObjectHideFlags: 0
@@ -1678,8 +1706,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1101548045}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: -3.22, y: -0.53, z: 0}
   m_LocalScale: {x: 1, y: 13.444885, z: 1}
+=======
+  m_LocalPosition: {x: 7.4, y: -1.7399998, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+>>>>>>> parent of e4410f8 (brand new lvl)
   m_Children: []
   m_Father: {fileID: 1379714021}
   m_RootOrder: 4
@@ -1788,8 +1821,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136231461}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: -1.107, y: -10.7, z: 0}
   m_LocalScale: {x: 39.126217, y: 2.9067, z: 1}
+=======
+  m_LocalPosition: {x: -2.24, y: -7.36, z: 0}
+  m_LocalScale: {x: 71.012, y: 1, z: 1}
+>>>>>>> parent of e4410f8 (brand new lvl)
   m_Children: []
   m_Father: {fileID: 1379714021}
   m_RootOrder: 0
@@ -1906,14 +1944,6 @@ Transform:
   - {fileID: 1101548046}
   - {fileID: 1465935054}
   - {fileID: 659423872}
-  - {fileID: 777177290}
-  - {fileID: 775237859}
-  - {fileID: 2000368177}
-  - {fileID: 2144581337}
-  - {fileID: 1699005200}
-  - {fileID: 2101336806}
-  - {fileID: 1061981336}
-  - {fileID: 861872252}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2109,7 +2139,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1465935053}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.07, y: -1.74, z: 0}
+  m_LocalPosition: {x: 10.18, y: -0.21999979, z: 0}
   m_LocalScale: {x: 3.7, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1379714021}
@@ -2331,6 +2361,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+<<<<<<< HEAD
 --- !u!1 &1699005199
 GameObject:
   m_ObjectHideFlags: 0
@@ -2441,6 +2472,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+=======
+>>>>>>> parent of e4410f8 (brand new lvl)
 --- !u!1 &1793883095
 GameObject:
   m_ObjectHideFlags: 0
@@ -2607,6 +2640,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+<<<<<<< HEAD
 --- !u!1 &2000368176
 GameObject:
   m_ObjectHideFlags: 0
@@ -2937,3 +2971,5 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+=======
+>>>>>>> parent of e4410f8 (brand new lvl)
