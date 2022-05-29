@@ -1459,17 +1459,7 @@ m_NavMeshLayer: 0
 -- - !u!4 & 1613941992
 Transform:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: { fileID: 0}
-m_PrefabInstance: { fileID: 0}
-m_PrefabAsset: { fileID: 0}
-m_GameObject: { fileID: 1613941991}
-m_Enabled: 1
-  m_Avatar: { fileID: 0}
-m_Controller: { fileID: 9100000, guid: b87582707d81323418264731c7096152, type: 2}
-m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
+
   m_Name: player_side_head
   m_TagString: Untagged
   m_Icon: { fileID: 0}
