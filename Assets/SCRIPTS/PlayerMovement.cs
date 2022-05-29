@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("COMPONENTS")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private BoxCollider2D bc;
+    [SerializeField] private LayerMask ground;
     [Header("MOVE")]
     [SerializeField] private float currentHorizontalSpeed;
     [SerializeField] private float currentVerticalSpeed;
@@ -19,7 +20,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float horizontalInput;
     [SerializeField] private bool space;
     [SerializeField] private bool shift;
-    [SerializeField] private LayerMask ground;
     [SerializeField] private float coyoteTime = .2f;
     [SerializeField] private float coyoteCounter;
     [Header("ANIMATIONS")]
@@ -125,20 +125,20 @@ public class PlayerMovement : MonoBehaviour
         if (shift)
         {
             idle.transform.localScale = new Vector3(1, .5f, 1);
-            idle.transform.localPosition = new Vector3(0, -5.125f - 7 / 6, 0);
+            idle.transform.localPosition = new Vector3(0, -5.125f - 7.5f / 6, 0);
             bc.size = new Vector2(6, 7.5f);
+            bc.offset = new Vector2(0, -3.725f);
             _maxSpeed = maxSpeed / 4;
             _jumpForce = jumpForce / 1.3f;
-            bc.offset = new Vector2(0, -3.725f);
         }
         else if (!hasSmthAboveHead)
         {
             idle.transform.localScale = new Vector3(1, 1, 1);
             idle.transform.localPosition = new Vector3(0, -5.125f, 0);
             bc.size = new Vector2(6, 15);
+            bc.offset = new Vector2(0, 0);
             _maxSpeed = maxSpeed;
             _jumpForce = jumpForce;
-            bc.offset = new Vector2(0, 0);
         }
     }
 
