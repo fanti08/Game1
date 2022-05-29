@@ -16,16 +16,15 @@ public class PlayerMovement : MonoBehaviour
     [Range(1, 100)] public float jumpForce;
     [SerializeField] private int _maxSpeed;
     [SerializeField] private float _jumpForce;
-    [SerializeField] private bool A;
-    [SerializeField] private bool D;
+    [SerializeField] private float horizontalInput;
     [SerializeField] private bool space;
     [SerializeField] private bool shift;
     [SerializeField] private LayerMask ground;
     [SerializeField] private float coyoteTime = .2f;
     [SerializeField] private float coyoteCounter;
     [Header("ANIMATIONS")]
-    [SerializeField] private GameObject idle;
-    [SerializeField] private GameObject side;
+    [SerializeField] public GameObject idle;
+    [SerializeField] public GameObject side;
 
 
     //VOIDS
@@ -34,8 +33,6 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
         ground = LayerMask.GetMask("Ground");
-        idle = GameObject.Find("Player_Idle");
-        side = GameObject.Find("Player_Side");
     }
 
     private void Update()
@@ -61,28 +58,28 @@ public class PlayerMovement : MonoBehaviour
 
     private void DefineKeys()
     {
-        A = Input.GetKey(KeyCode.A) ? true : false;
-        D = Input.GetKey(KeyCode.D) ? true : false;
+        horizontalInput = (Input.GetKey(KeyCode.D) ? 1 : 0) - (Input.GetKey(KeyCode.A) ? 1 : 0);
         space = Input.GetKey(KeyCode.Space) ? true : false;
         shift = Input.GetKey(KeyCode.LeftShift) ? true : false;
     }
 
     private void Move()
     {
-        if (!A && !D) Decelerate();
-        if (A || D) Accelerate();
+        if (horizontalInput == 0) Decelerate();
+        else Accelerate();
     }
     private void Accelerate()
     {
         Vector2 DspeedToAccel = new Vector2(rb.velocity.x + Time.deltaTime * 35, currentVerticalSpeed);
-        Vector2 DspeedToAccelinAir = new Vector2(rb.velocity.x + Time.deltaTime * 35 / 1.5f, currentVerticalSpeed); 
+        Vector2 DspeedToAccelinAir = new Vector2(rb.velocity.x + Time.deltaTime * 35 / 1.5f, currentVerticalSpeed);
         Vector2 AspeedToAccel = new Vector2(rb.velocity.x + Time.deltaTime * -35, currentVerticalSpeed);
         Vector2 AspeedToAccelinAir = new Vector2(rb.velocity.x + Time.deltaTime * -35 / 1.5f, currentVerticalSpeed);
         if (Mathf.Abs(currentHorizontalSpeed) < _maxSpeed)
         {
-            if (A) rb.velocity = isGrounded ? AspeedToAccelinAir : AspeedToAccel;
-            if (D) rb.velocity = isGrounded ? DspeedToAccelinAir : DspeedToAccel;
+            if (horizontalInput < 0) rb.velocity = isGrounded ? AspeedToAccelinAir : AspeedToAccel;
+            if (horizontalInput > 0) rb.velocity = isGrounded ? DspeedToAccelinAir : DspeedToAccel;
         }
+        rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -_maxSpeed, _maxSpeed), currentVerticalSpeed);
         if (currentHorizontalSpeed > _maxSpeed - .05f) rb.velocity = new Vector2(_maxSpeed, currentVerticalSpeed);
         if (currentHorizontalSpeed < -_maxSpeed + .05f) rb.velocity = new Vector2(-_maxSpeed, currentVerticalSpeed);
     }
@@ -104,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (space && coyoteCounter > 0)
         {
-            rb.velocity = new Vector2(currentHorizontalSpeed * 1.3f, _jumpForce);
+            rb.velocity = new Vector2(currentHorizontalSpeed, _jumpForce);
             coyoteCounter = 0;
         }
         CoyoteTime();
@@ -119,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             coyoteCounter -= Time.deltaTime;
-            rb.gravityScale = 4;
+            rb.gravityScale = 6;
         }
     }
 
