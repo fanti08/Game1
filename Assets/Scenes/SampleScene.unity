@@ -235,13 +235,8 @@ Transform:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
   m_LocalPosition: {x: 9.12, y: -1.2841, z: 0}
   m_LocalScale: {x: 3.2493584, y: 6.3440638, z: 1}
-=======
-  m_LocalPosition: {x: 5.96, y: -3.35, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
->>>>>>> parent of e4410f8 (brand new lvl)
 =======
   m_LocalPosition: {x: 5.96, y: -3.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -448,13 +443,8 @@ Transform:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
   m_LocalPosition: {x: 3.56, y: -6.77, z: 0}
   m_LocalScale: {x: 14.338717, y: 1, z: 1}
-=======
-  m_LocalPosition: {x: 3.6528, y: -4.66, z: 0}
-  m_LocalScale: {x: 2.7656, y: 1, z: 1}
->>>>>>> parent of e4410f8 (brand new lvl)
 =======
   m_LocalPosition: {x: 3.6528, y: -4.66, z: 0}
   m_LocalScale: {x: 2.7656, y: 1, z: 1}
@@ -621,16 +611,11 @@ MonoBehaviour:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
   rb: {fileID: 437993895}
   bc: {fileID: 437993897}
   ground:
     serializedVersion: 2
     m_Bits: 0
-=======
-  rb: {fileID: 0}
-  bc: {fileID: 0}
->>>>>>> parent of e4410f8 (brand new lvl)
 =======
   rb: {fileID: 0}
   bc: {fileID: 0}
@@ -1075,13 +1060,8 @@ Transform:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
   m_LocalPosition: {x: 16.1641, y: 9.0332, z: 0}
   m_LocalScale: {x: 4.6866627, y: 42.008793, z: 1}
-=======
-  m_LocalPosition: {x: 17.32, y: -4.31, z: 0}
-  m_LocalScale: {x: 1, y: 5.2, z: 1}
->>>>>>> parent of e4410f8 (brand new lvl)
 =======
   m_LocalPosition: {x: 17.32, y: -4.31, z: 0}
   m_LocalScale: {x: 1, y: 5.2, z: 1}
@@ -1176,7 +1156,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
-<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1516,8 +1495,6 @@ SpriteRenderer:
 >>>>>>> parent of e4410f8 (brand new lvl)
 =======
 >>>>>>> parent of e4410f8 (brand new lvl)
-=======
->>>>>>> parent of e4410f8 (brand new lvl)
 --- !u!1 &1015734913
 GameObject:
   m_ObjectHideFlags: 0
@@ -1601,7 +1578,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
-<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1721,8 +1697,6 @@ SpriteRenderer:
 >>>>>>> parent of e4410f8 (brand new lvl)
 =======
 >>>>>>> parent of e4410f8 (brand new lvl)
-=======
->>>>>>> parent of e4410f8 (brand new lvl)
 --- !u!1 &1072452935
 GameObject:
   m_ObjectHideFlags: 0
@@ -1787,13 +1761,8 @@ Transform:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
   m_LocalPosition: {x: -3.22, y: -0.53, z: 0}
   m_LocalScale: {x: 1, y: 13.444885, z: 1}
-=======
-  m_LocalPosition: {x: 7.4, y: -1.7399998, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
->>>>>>> parent of e4410f8 (brand new lvl)
 =======
   m_LocalPosition: {x: 7.4, y: -1.7399998, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -1917,13 +1886,8 @@ Transform:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
   m_LocalPosition: {x: -1.107, y: -10.7, z: 0}
   m_LocalScale: {x: 39.126217, y: 2.9067, z: 1}
-=======
-  m_LocalPosition: {x: -2.24, y: -7.36, z: 0}
-  m_LocalScale: {x: 71.012, y: 1, z: 1}
->>>>>>> parent of e4410f8 (brand new lvl)
 =======
   m_LocalPosition: {x: -2.24, y: -7.36, z: 0}
   m_LocalScale: {x: 71.012, y: 1, z: 1}
@@ -2472,7 +2436,6 @@ Animator:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 --- !u!1 &1699005199
 GameObject:
   m_ObjectHideFlags: 0
@@ -2583,8 +2546,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
-=======
->>>>>>> parent of e4410f8 (brand new lvl)
 =======
 >>>>>>> parent of e4410f8 (brand new lvl)
 =======
@@ -2757,7 +2718,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
-<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -3091,8 +3051,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
-=======
->>>>>>> parent of e4410f8 (brand new lvl)
 =======
 >>>>>>> parent of e4410f8 (brand new lvl)
 =======
