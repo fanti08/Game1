@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size, 0, Vector2.down, .02f, ground);
         if (currentHorizontalSpeed > 0) wasGoingRight = true;
         if (currentHorizontalSpeed < 0) wasGoingRight = false;
-        hasSmthAboveHead = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size, 0, Vector2.up, .75f, ground);
+        hasSmthAboveHead = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size, 0, Vector2.up, 1.5f, ground);
     }
 
     private void DefineKeys()
