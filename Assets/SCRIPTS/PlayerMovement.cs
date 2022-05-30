@@ -70,10 +70,10 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Accelerate()
     {
-        Vector2 DspeedToAccel = new Vector2(rb.velocity.x + Time.deltaTime * 35, currentVerticalSpeed);
-        Vector2 DspeedToAccelinAir = new Vector2(rb.velocity.x + Time.deltaTime * 35 / 1.5f, currentVerticalSpeed);
-        Vector2 AspeedToAccel = new Vector2(rb.velocity.x + Time.deltaTime * -35, currentVerticalSpeed);
-        Vector2 AspeedToAccelinAir = new Vector2(rb.velocity.x + Time.deltaTime * -35 / 1.5f, currentVerticalSpeed);
+        Vector2 DspeedToAccel = new Vector2(rb.velocity.x + Time.deltaTime * 75, currentVerticalSpeed);
+        Vector2 DspeedToAccelinAir = new Vector2(rb.velocity.x + Time.deltaTime * 75 / 1.5f, currentVerticalSpeed);
+        Vector2 AspeedToAccel = new Vector2(rb.velocity.x + Time.deltaTime * -75, currentVerticalSpeed);
+        Vector2 AspeedToAccelinAir = new Vector2(rb.velocity.x + Time.deltaTime * -75 / 1.5f, currentVerticalSpeed);
         if (Mathf.Abs(currentHorizontalSpeed) < _maxSpeed)
         {
             if (horizontalInput < 0) rb.velocity = isGrounded ? AspeedToAccelinAir : AspeedToAccel;
@@ -85,10 +85,10 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Decelerate()
     {
-        Vector2 DspeedToDecel = new Vector2(rb.velocity.x - Time.deltaTime * 35, currentVerticalSpeed);
-        Vector2 DspeedToDecelinAir = new Vector2(rb.velocity.x - Time.deltaTime * 35 / 1.5f, currentVerticalSpeed);
-        Vector2 AspeedToDecel = new Vector2(rb.velocity.x + Time.deltaTime * 35, currentVerticalSpeed);
-        Vector2 AspeedToDecelinAir = new Vector2(rb.velocity.x + Time.deltaTime * 35 / 1.5f, currentVerticalSpeed);
+        Vector2 DspeedToDecel = new Vector2(rb.velocity.x - Time.deltaTime * 150, currentVerticalSpeed);
+        Vector2 DspeedToDecelinAir = new Vector2(rb.velocity.x - Time.deltaTime * 150 / 1.5f, currentVerticalSpeed);
+        Vector2 AspeedToDecel = new Vector2(rb.velocity.x + Time.deltaTime * 150, currentVerticalSpeed);
+        Vector2 AspeedToDecelinAir = new Vector2(rb.velocity.x + Time.deltaTime * 150 / 1.5f, currentVerticalSpeed);
         if (Mathf.Abs(currentHorizontalSpeed) > 0)
         {
             if (!wasGoingRight) rb.velocity = isGrounded ? AspeedToDecelinAir : AspeedToDecel;
