@@ -125,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
         if (shift)
         {
             idle.transform.localScale = new Vector3(1, .5f, 1);
-            idle.transform.localPosition = new Vector3(0, -5.125f - 7.5f / 6, 0);
+            idle.transform.localPosition = new Vector3(0, -5.25f - 7.5f / 6, 0);
             bc.size = new Vector2(6, 7.5f);
             bc.offset = new Vector2(0, -3.725f);
             _maxSpeed = maxSpeed / 4;
@@ -134,7 +134,7 @@ public class PlayerMovement : MonoBehaviour
         else if (!hasSmthAboveHead)
         {
             idle.transform.localScale = new Vector3(1, 1, 1);
-            idle.transform.localPosition = new Vector3(0, -5.125f, 0);
+            idle.transform.localPosition = new Vector3(0, -5.25f, 0);
             bc.size = new Vector2(6, 15);
             bc.offset = new Vector2(0, 0);
             _maxSpeed = maxSpeed;
