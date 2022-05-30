@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("COMPONENTS")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private BoxCollider2D bc;
+    [SerializeField] private LayerMask ground;
     [Header("MOVE")]
     [SerializeField] private float currentHorizontalSpeed;
     [SerializeField] private float currentVerticalSpeed;
@@ -19,7 +20,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float horizontalInput;
     [SerializeField] private bool space;
     [SerializeField] private bool shift;
-    [SerializeField] private LayerMask ground;
     [SerializeField] private float coyoteTime = .2f;
     [SerializeField] private float coyoteCounter;
     [Header("ANIMATIONS")]
@@ -70,10 +70,10 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Accelerate()
     {
-        Vector2 DspeedToAccel = new Vector2(rb.velocity.x + Time.deltaTime * 35, currentVerticalSpeed);
-        Vector2 DspeedToAccelinAir = new Vector2(rb.velocity.x + Time.deltaTime * 35 / 1.5f, currentVerticalSpeed);
-        Vector2 AspeedToAccel = new Vector2(rb.velocity.x + Time.deltaTime * -35, currentVerticalSpeed);
-        Vector2 AspeedToAccelinAir = new Vector2(rb.velocity.x + Time.deltaTime * -35 / 1.5f, currentVerticalSpeed);
+        Vector2 DspeedToAccel = new Vector2(rb.velocity.x + Time.deltaTime * 75, currentVerticalSpeed);
+        Vector2 DspeedToAccelinAir = new Vector2(rb.velocity.x + Time.deltaTime * 75 / 1.5f, currentVerticalSpeed);
+        Vector2 AspeedToAccel = new Vector2(rb.velocity.x + Time.deltaTime * -75, currentVerticalSpeed);
+        Vector2 AspeedToAccelinAir = new Vector2(rb.velocity.x + Time.deltaTime * -75 / 1.5f, currentVerticalSpeed);
         if (Mathf.Abs(currentHorizontalSpeed) < _maxSpeed)
         {
             if (horizontalInput < 0) rb.velocity = isGrounded ? AspeedToAccelinAir : AspeedToAccel;
@@ -85,10 +85,10 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Decelerate()
     {
-        Vector2 DspeedToDecel = new Vector2(rb.velocity.x - Time.deltaTime * 35, currentVerticalSpeed);
-        Vector2 DspeedToDecelinAir = new Vector2(rb.velocity.x - Time.deltaTime * 35 / 1.5f, currentVerticalSpeed);
-        Vector2 AspeedToDecel = new Vector2(rb.velocity.x + Time.deltaTime * 35, currentVerticalSpeed);
-        Vector2 AspeedToDecelinAir = new Vector2(rb.velocity.x + Time.deltaTime * 35 / 1.5f, currentVerticalSpeed);
+        Vector2 DspeedToDecel = new Vector2(rb.velocity.x - Time.deltaTime * 150, currentVerticalSpeed);
+        Vector2 DspeedToDecelinAir = new Vector2(rb.velocity.x - Time.deltaTime * 150 / 1.5f, currentVerticalSpeed);
+        Vector2 AspeedToDecel = new Vector2(rb.velocity.x + Time.deltaTime * 150, currentVerticalSpeed);
+        Vector2 AspeedToDecelinAir = new Vector2(rb.velocity.x + Time.deltaTime * 150 / 1.5f, currentVerticalSpeed);
         if (Mathf.Abs(currentHorizontalSpeed) > 0)
         {
             if (!wasGoingRight) rb.velocity = isGrounded ? AspeedToDecelinAir : AspeedToDecel;
@@ -125,20 +125,20 @@ public class PlayerMovement : MonoBehaviour
         if (shift)
         {
             idle.transform.localScale = new Vector3(1, .5f, 1);
-            idle.transform.localPosition = new Vector3(0, -5.125f - 7 / 6, 0);
+            idle.transform.localPosition = new Vector3(0, -5.25f - 7.5f / 6, 0);
             bc.size = new Vector2(6, 7.5f);
+            bc.offset = new Vector2(0, -3.725f);
             _maxSpeed = maxSpeed / 4;
             _jumpForce = jumpForce / 1.3f;
-            bc.offset = new Vector2(0, -3.725f);
         }
         else if (!hasSmthAboveHead)
         {
             idle.transform.localScale = new Vector3(1, 1, 1);
-            idle.transform.localPosition = new Vector3(0, -5.125f, 0);
+            idle.transform.localPosition = new Vector3(0, -5.25f, 0);
             bc.size = new Vector2(6, 15);
+            bc.offset = new Vector2(0, 0);
             _maxSpeed = maxSpeed;
             _jumpForce = jumpForce;
-            bc.offset = new Vector2(0, 0);
         }
     }
 
