@@ -1,5 +1,4 @@
 using UnityEngine;
-using TMPro;
 using System.Collections.Generic;
 
 public class PlayerMovement : MonoBehaviour
@@ -19,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     [Range(1, 100)] public float jumpForce;
     [SerializeField] private float _maxSpeed;
     [SerializeField] private float _jumpForce;
-    [SerializeField] private float horizontalInput;
+    [SerializeField] private int horizontalInput;
     [SerializeField] private bool space;
     [SerializeField] private bool shift;
     [SerializeField] private float coyoteTimeCounter;
@@ -37,18 +36,17 @@ public class PlayerMovement : MonoBehaviour
     [Header("ANIMATIONS")]
     public GameObject idle;
     public GameObject side;
-    [Header("DEBUG")]
+    public Animator animator;
+    /*/[Header("DEBUG")]
     [SerializeField] private bool isDebugActive = false;
-    [SerializeField] public TMP_Text x;
-    [SerializeField] public TMP_Text y;
-    [SerializeField] private Color colliderColor = Color.blue;
-    [SerializeField] private Color jumpIndicatorColor = Color.yellow;
+    [SerializeField] public Color colliderColor = Color.blue;
+    [SerializeField] public Color jumpIndicatorColor = Color.yellow;
+    [SerializeField] public Color edgeColor = Color.blue;
     [SerializeField] private Color hassmthAboveColor;
     [SerializeField] private Color isGroundedColor;
     [SerializeField] public KeyCode slowDownKey;
     [SerializeField] public KeyCode debugModeKey;
-    [SerializeField] private List<JumpIndicator> jumpIndicators = new List<JumpIndicator>();
-    [SerializeField] public GameObject debugModeObject;
+    [SerializeField] private List<JumpIndicator> jumpIndicators = new List<JumpIndicator>();/*/
 
 
     //VOIDS
@@ -69,7 +67,9 @@ public class PlayerMovement : MonoBehaviour
         CheckVelocities();
         EdgeCorrection();
 
-        Debug();
+        Anims();
+
+        //Debug();
     }
 
     #region MOVE
@@ -154,6 +154,8 @@ public class PlayerMovement : MonoBehaviour
         {
             idle.transform.localScale = new Vector3(1, .5f, 1);
             idle.transform.localPosition = new Vector3(0, -5.25f - 7.5f / 6, 0);
+            side.transform.localScale = new Vector3(1, .5f, 1);
+            side.transform.localPosition = new Vector3(0, -5.25f - 7.5f / 6, 0);
             bc.size = new Vector2(6, 7.5f);
             bc.offset = new Vector2(0, -3.725f);
             _jumpForce = jumpForce / crouchJump;
@@ -162,6 +164,8 @@ public class PlayerMovement : MonoBehaviour
         {
             idle.transform.localScale = new Vector3(1, 1, 1);
             idle.transform.localPosition = new Vector3(0, -5.25f, 0);
+            side.transform.localScale = new Vector3(1, 1, 1);
+            side.transform.localPosition = new Vector3(0, -5.25f, 0);
             bc.size = new Vector2(6, 15);
             bc.offset = new Vector2(0, 0);
             _jumpForce = jumpForce;
@@ -209,11 +213,15 @@ public class PlayerMovement : MonoBehaviour
 
     #region ANIMATIONS
 
-
+    private void Anims()
+    {
+        if (horizontalInput == 0) animator.SetInteger("direction", 0);
+        else animator.SetInteger("direction", -horizontalInput);
+    }
 
     #endregion ANIMATIONS
 
-    #region DEBUG
+    /*/#region DEBUG
 
     class JumpIndicator
     {
@@ -229,18 +237,14 @@ public class PlayerMovement : MonoBehaviour
     private void Debug()
     {
         if (Input.GetKeyDown(debugModeKey)) isDebugActive = !isDebugActive;
-        debugModeObject.SetActive(isDebugActive);
-        GetComponent<TrailRenderer>().enabled = isDebugActive;
         if (!isDebugActive) Time.timeScale = 1;
 
         if (isDebugActive)
         {
             if (Input.GetKey(slowDownKey)) Time.timeScale = 0.25f;
             else Time.timeScale = 1;
+            print("HORIZONTAL VELOCITY = " + ((float)Mathf.Round(rb.velocity.x * 100) / 100).ToString() + "VERTICAL VELOCITY = " + ((float)Mathf.Round(rb.velocity.y * 100) / 100).ToString());
         }
-
-        x.text = "HORIZONTAL VELOCITY = " + ((float)Mathf.Round(rb.velocity.x * 100) / 100).ToString();
-        y.text = "VERTICAL VELOCITY = " + ((float)Mathf.Round(rb.velocity.y * 100) / 100).ToString();
 
         if (Input.GetKeyDown(KeyCode.Space)) jumpIndicators.Add(new JumpIndicator(bc.bounds.center + Vector3.down * (bc.bounds.size.y / 2), 5));
 
@@ -270,9 +274,8 @@ public class PlayerMovement : MonoBehaviour
             Vector2 RDir = Vector2.left;
             Vector2 LDir = Vector2.right;
 
-            Gizmos.color = Color.blue;
+            Gizmos.color = edgeColor;
             Gizmos.DrawRay(ROrigin, RDir * edgeAmount);
-            Gizmos.color = Color.red;
             Gizmos.DrawRay(LOrigin, LDir * edgeAmount);
 
             Gizmos.color = jumpIndicatorColor;
@@ -289,5 +292,5 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    #endregion DEBUG
+    #endregion DEBUG/*/
 }
