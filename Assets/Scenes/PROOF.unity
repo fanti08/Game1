@@ -286,6 +286,7 @@ GameObject:
   - component: {fileID: 1571055116}
   - component: {fileID: 1571055117}
   - component: {fileID: 1571055118}
+  - component: {fileID: 1571055119}
   m_Layer: 0
   m_Name: PLAYER
   m_TagString: Untagged
@@ -349,20 +350,20 @@ MonoBehaviour:
   accelSpeed: 75
   decelSpeed: 150
   coyoteAmount: 0.2
-  bufferAmount: 0.2
-  edgeAmount: 0.2
+  bufferAmount: 2
+  edgeAmount: 0.4
   gravityWhenJumping: 6
   idle: {fileID: 3435748988914152920}
   side: {fileID: 3435748989558687610}
   animator: {fileID: 3435748989293655874}
   isDebugActive: 0
-  colliderColor: {r: 0, g: 1, b: 0, a: 0.29411766}
+  colliderColor: {r: 0, g: 0, b: 1, a: 1}
   jumpIndicatorColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   edgeColor: {r: 0, g: 0, b: 1, a: 1}
   hassmthAboveColor: {r: 0, g: 0, b: 0, a: 0}
   isGroundedColor: {r: 0, g: 0, b: 0, a: 0}
-  slowDownKey: 306
-  debugModeKey: 46
+  slowDownKey: 0
+  debugModeKey: 0
 --- !u!50 &1571055117
 Rigidbody2D:
   serializedVersion: 4
@@ -410,6 +411,26 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 6, y: 15}
   m_EdgeRadius: 0
+--- !u!95 &1571055119
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571055114}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8abbb43be33e83b438e886ce11aba126, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3435748988914152920
 GameObject:
   m_ObjectHideFlags: 0
@@ -641,7 +662,7 @@ Animator:
   m_GameObject: {fileID: 3435748989293655872}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c15b8a3e577e5e742affb6fc42f99fe2, type: 2}
+  m_Controller: {fileID: 9100000, guid: e0a97987c23d58c47ab26c367748d5db, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3083,7 +3104,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5426829005954115252}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12, y: -6, z: 0}
+  m_LocalPosition: {x: -12, y: -7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

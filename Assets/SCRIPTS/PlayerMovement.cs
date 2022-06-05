@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject idle;
     public GameObject side;
     public Animator animator;
-    /*/[Header("DEBUG")]
+    [Header("DEBUG")]
     [SerializeField] private bool isDebugActive = false;
     [SerializeField] public Color colliderColor = Color.blue;
     [SerializeField] public Color jumpIndicatorColor = Color.yellow;
@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Color isGroundedColor;
     [SerializeField] public KeyCode slowDownKey;
     [SerializeField] public KeyCode debugModeKey;
-    [SerializeField] private List<JumpIndicator> jumpIndicators = new List<JumpIndicator>();/*/
+    [SerializeField] private List<JumpIndicator> jumpIndicators = new List<JumpIndicator>();
 
 
     //VOIDS
@@ -65,12 +65,17 @@ public class PlayerMovement : MonoBehaviour
         Jump();
         Crouch();
         CheckVelocities();
-        EdgeCorrection();
 
         Anims();
 
-        //Debug();
+        Debug();
     }
+
+    private void FixedUpdate()
+    {
+        EdgeCorrection();
+    }
+
 
     #region MOVE
 
@@ -84,7 +89,6 @@ public class PlayerMovement : MonoBehaviour
         if (currentHorizontalSpeed < -.01f) wasGoingRight = false;
         hasSmthAboveHead = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size, 0, Vector2.up, 1.5f, ground);
     }
-
     private void DefineKeys()
     {
         horizontalInput = (Input.GetKey(KeyCode.D) ? 1 : 0) - (Input.GetKey(KeyCode.A) ? 1 : 0);
@@ -183,27 +187,27 @@ public class PlayerMovement : MonoBehaviour
     private void EdgeCorrection()
     {
         Vector3 offset = new Vector3(bc.offset.x, bc.offset.y, transform.position.z) / 5;
-        Vector3 ROrigin = offset + transform.position + new Vector3(bc.size.x / 10 + 0.005f, (bc.size.y / 10) + 0.25f, transform.position.z);
-        Vector3 LOrigin = offset + transform.position + new Vector3(-bc.size.x / 10 - 0.005f, (bc.size.y / 10) + 0.25f, transform.position.z);
+        Vector3 ROrigin = offset + transform.position + new Vector3(bc.size.x / 10 + .05f, (bc.size.y / 10) + 0.25f, transform.position.z);
+        Vector3 LOrigin = offset + transform.position + new Vector3(-bc.size.x / 10 - .05f, (bc.size.y / 10) + 0.25f, transform.position.z);
 
         Vector2 RDir = Vector2.left;
         Vector2 LDir = Vector2.right;
-        float dist = (1 + -edgeAmount) * (bc.size.x * 2 / 10);
+        float dist = (1 - edgeAmount) * (bc.size.x * .2f);
 
         RaycastHit2D Rhit = Physics2D.Raycast(ROrigin, RDir, dist, ground);
         RaycastHit2D Lhit = Physics2D.Raycast(LOrigin, LDir, dist, ground);
 
         if (Lhit.collider == null && Rhit.collider == null) vel = rb.velocity;
-        if (!isGrounded && vel.y > 0.2f)
+        if (!isGrounded && vel.y > .01f)
         {
-            if (Lhit.collider != null && Rhit.collider == null && vel.x > -0.3f)
+            if (Lhit.collider != null && Rhit.collider == null && vel.x > -.3f)
             {
                 transform.position = new Vector3(transform.position.x + 0.2f, transform.position.y, transform.position.z);
                 rb.velocity = vel;
             }
-            else if (Lhit.collider == null && Rhit.collider != null && vel.x < 0.3f)
+            else if (Lhit.collider == null && Rhit.collider != null && vel.x < .3f)
             {
-                transform.position = new Vector3(transform.position.x - 0.2f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(transform.position.x - .2f, transform.position.y, transform.position.z);
                 rb.velocity = vel;
             }
         }
@@ -216,12 +220,14 @@ public class PlayerMovement : MonoBehaviour
     private void Anims()
     {
         if (horizontalInput == 0) animator.SetInteger("direction", 0);
-        else animator.SetInteger("direction", -horizontalInput);
+        else animator.SetInteger("direction", horizontalInput);
+        if (jumpBufferCounter > 0 && coyoteTimeCounter > 0 && currentVerticalSpeed <= 0) animator.SetTrigger("jump");
+        animator.SetBool("inair", !isGrounded);
     }
 
     #endregion ANIMATIONS
 
-    /*/#region DEBUG
+    #region DEBUG
 
     class JumpIndicator
     {
@@ -292,5 +298,5 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    #endregion DEBUG/*/
+    #endregion DEBUG
 }
