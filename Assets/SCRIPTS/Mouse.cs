@@ -2,16 +2,19 @@ using UnityEngine;
 
 public class Mouse : MonoBehaviour
 {
-    [SerializeField] Camera cam;
+    [SerializeField] private Transform player;
 
-    void Start()
+    private void Start()
     {
         Cursor.visible = false;
     }
 
     void Update()
     {
-        Vector2 pos = cam.ScreenToWorldPoint(Input.mousePosition);
-        transform.position = pos;
+        transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+        Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - player.position;
+        difference.Normalize();
+        float rotation_z = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, rotation_z - 90);
     }
 }

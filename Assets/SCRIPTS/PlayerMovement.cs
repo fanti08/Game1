@@ -85,8 +85,10 @@ public class PlayerMovement : MonoBehaviour
         currentVerticalSpeed = rb.velocity.y;
         isGrounded = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size, 0, Vector2.down, .1f, ground);
         isShifting = shift || (hasSmthAboveHead && bc.size == new Vector2(6, 7.5f));
-        if (currentHorizontalSpeed > .01f) wasGoingRight = true;
-        if (currentHorizontalSpeed < -.01f) wasGoingRight = false;
+        if (currentHorizontalSpeed > .01f) 
+            wasGoingRight = true;
+        if (currentHorizontalSpeed < -.01f) 
+            wasGoingRight = false;
         hasSmthAboveHead = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size, 0, Vector2.up, 1.5f, ground);
     }
     private void DefineKeys()
@@ -98,27 +100,35 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        if (horizontalInput == 0) Decelerate();
+        if (horizontalInput == 0) 
+            Decelerate();
         else Accelerate();
     }
     private void Accelerate()
     {
         float xVelToAdd;
-        if (!isGrounded) xVelToAdd = Time.deltaTime * accelSpeed * horizontalInput / 1.5f;
-        else xVelToAdd = Time.deltaTime * accelSpeed * horizontalInput;
+        if (!isGrounded) 
+            xVelToAdd = Time.deltaTime * accelSpeed * horizontalInput / 1.5f;
+        else 
+            xVelToAdd = Time.deltaTime * accelSpeed * horizontalInput;
         Vector2 speedToAccel = new Vector2(rb.velocity.x + xVelToAdd, currentVerticalSpeed);
-        if (Mathf.Abs(currentHorizontalSpeed) < _maxSpeed) rb.velocity = speedToAccel;
+        if (Mathf.Abs(currentHorizontalSpeed) < _maxSpeed) 
+            rb.velocity = speedToAccel;
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -_maxSpeed, _maxSpeed), currentVerticalSpeed);
     }
     private void Decelerate()
     {
         int xDir = wasGoingRight ? 1 : -1;
         float xVelToReduce;
-        if (!isGrounded) xVelToReduce = Time.deltaTime * decelSpeed * xDir / 1.5f;
-        else xVelToReduce = Time.deltaTime * decelSpeed * xDir;
+        if (!isGrounded) 
+            xVelToReduce = Time.deltaTime * decelSpeed * xDir / 1.5f;
+        else 
+            xVelToReduce = Time.deltaTime * decelSpeed * xDir;
         Vector2 speedToDecel = new Vector2(rb.velocity.x - xVelToReduce, currentVerticalSpeed);
-        if (Mathf.Abs(currentHorizontalSpeed) > 0) rb.velocity = speedToDecel;
-        if (Mathf.Abs(currentHorizontalSpeed) < .05f) rb.velocity = new Vector2(0, currentVerticalSpeed);
+        if (Mathf.Abs(currentHorizontalSpeed) > 0) 
+            rb.velocity = speedToDecel;
+        if (Mathf.Abs(currentHorizontalSpeed) < .05f) 
+            rb.velocity = new Vector2(0, currentVerticalSpeed);
     }
 
     private void Jump()
@@ -149,7 +159,8 @@ public class PlayerMovement : MonoBehaviour
     private void JumpBuffer()
     {
         jumpBufferCounter -= Time.deltaTime;
-        if (space) jumpBufferCounter = bufferAmount;
+        if (space) 
+            jumpBufferCounter = bufferAmount;
     }
 
     private void Crouch()
@@ -170,10 +181,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckVelocities()
     {
-        if (isGrounded && !isShifting) _maxSpeed = maxSpeed;
-        if (!isGrounded && !isShifting) _maxSpeed = maxSpeed / jumpSpeed;
-        if (isGrounded && isShifting) _maxSpeed = maxSpeed / crouchSpeed;
-        if (!isGrounded && isShifting) _maxSpeed = maxSpeed / crouchSpeed / jumpSpeed;
+        if (isGrounded && !isShifting) 
+            _maxSpeed = maxSpeed;
+        if (!isGrounded && !isShifting) 
+            _maxSpeed = maxSpeed / jumpSpeed;
+        if (isGrounded && isShifting) 
+            _maxSpeed = maxSpeed / crouchSpeed;
+        if (!isGrounded && isShifting) 
+            _maxSpeed = maxSpeed / crouchSpeed / jumpSpeed;
     }
 
     private void EdgeCorrection()
@@ -189,7 +204,8 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit2D Rhit = Physics2D.Raycast(ROrigin, RDir, dist, ground);
         RaycastHit2D Lhit = Physics2D.Raycast(LOrigin, LDir, dist, ground);
 
-        if (Lhit.collider == null && Rhit.collider == null) vel = rb.velocity;
+        if (Lhit.collider == null && Rhit.collider == null) 
+            vel = rb.velocity;
         if (!isGrounded && vel.y > .01f)
         {
             if (Lhit.collider != null && Rhit.collider == null && vel.x > -.3f)
@@ -211,9 +227,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Anims()
     {
-        if (horizontalInput == 0) animator.SetInteger("direction", 0);
-        else animator.SetInteger("direction", horizontalInput);
-        if (jumpBufferCounter > 0 && coyoteTimeCounter > 0 && currentVerticalSpeed <= 0) animator.SetTrigger("jump");
+        if (horizontalInput == 0) 
+            animator.SetInteger("direction", 0);
+        else 
+            animator.SetInteger("direction", horizontalInput);
+        if (jumpBufferCounter > 0 && coyoteTimeCounter > 0 && currentVerticalSpeed <= 0) 
+            animator.SetTrigger("jump");
         animator.SetBool("inair", !isGrounded);
     }
 
@@ -234,8 +253,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Debug()
     {
-        if (Input.GetKeyDown(debugModeKey)) isDebugActive = !isDebugActive;
-        if (!isDebugActive) Time.timeScale = 1;
+        if (Input.GetKeyDown(debugModeKey)) 
+            isDebugActive = !isDebugActive;
+        if (!isDebugActive) 
+            Time.timeScale = 1;
 
         if (isDebugActive)
         {
@@ -244,12 +265,14 @@ public class PlayerMovement : MonoBehaviour
             print("HORIZONTAL VELOCITY = " + ((float)Mathf.Round(rb.velocity.x * 100) / 100).ToString() + "VERTICAL VELOCITY = " + ((float)Mathf.Round(rb.velocity.y * 100) / 100).ToString());
         }
 
-        if (Input.GetKeyDown(KeyCode.Space)) jumpIndicators.Add(new JumpIndicator(bc.bounds.center + Vector3.down * (bc.bounds.size.y / 2), 5));
+        if (Input.GetKeyDown(KeyCode.Space)) 
+            jumpIndicators.Add(new JumpIndicator(bc.bounds.center + Vector3.down * (bc.bounds.size.y / 2), 5));
 
         for (int i = 0; i < jumpIndicators.Count; i++)
         {
             jumpIndicators[i].coolDowm -= Time.deltaTime;
-            if (jumpIndicators[i].coolDowm < 0) jumpIndicators.Remove(jumpIndicators[i]);
+            if (jumpIndicators[i].coolDowm < 0) 
+                jumpIndicators.Remove(jumpIndicators[i]);
         }
 
         hassmthAboveColor = hasSmthAboveHead ? Color.green : Color.red;
