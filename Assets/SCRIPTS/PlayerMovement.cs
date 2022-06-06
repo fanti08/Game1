@@ -84,7 +84,7 @@ public class PlayerMovement : MonoBehaviour
         currentHorizontalSpeed = rb.velocity.x;
         currentVerticalSpeed = rb.velocity.y;
         isGrounded = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size, 0, Vector2.down, .1f, ground);
-        isShifting = shift || (hasSmthAboveHead && idle.transform.localScale != new Vector3(1, 1, 1));
+        isShifting = shift || (hasSmthAboveHead && bc.size == new Vector2(6, 7.5f));
         if (currentHorizontalSpeed > .01f) wasGoingRight = true;
         if (currentHorizontalSpeed < -.01f) wasGoingRight = false;
         hasSmthAboveHead = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size, 0, Vector2.up, 1.5f, ground);
@@ -155,21 +155,13 @@ public class PlayerMovement : MonoBehaviour
     private void Crouch()
     {
         if (isShifting)
-        {
-            idle.transform.localScale = new Vector3(1, .5f, 1);
-            idle.transform.localPosition = new Vector3(0, -5.25f - 7.5f / 6, 0);
-            side.transform.localScale = new Vector3(1, .5f, 1);
-            side.transform.localPosition = new Vector3(0, -5.25f - 7.5f / 6, 0);
+        { 
             bc.size = new Vector2(6, 7.5f);
             bc.offset = new Vector2(0, -3.725f);
             _jumpForce = jumpForce / crouchJump;
         }
         else
         {
-            idle.transform.localScale = new Vector3(1, 1, 1);
-            idle.transform.localPosition = new Vector3(0, -5.25f, 0);
-            side.transform.localScale = new Vector3(1, 1, 1);
-            side.transform.localPosition = new Vector3(0, -5.25f, 0);
             bc.size = new Vector2(6, 15);
             bc.offset = new Vector2(0, 0);
             _jumpForce = jumpForce;
