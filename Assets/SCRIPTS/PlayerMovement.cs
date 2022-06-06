@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -14,38 +15,45 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool isShifting;
     [SerializeField] private bool hasSmthAboveHead;
     [SerializeField] private bool wasGoingRight;
-    [Range(1, 100)] public float maxSpeed;
-    [Range(1, 100)] public float jumpForce;
+    [Range(1, 100)] [SerializeField] private float maxSpeed;
+    [Range(1, 100)] [SerializeField] private float jumpForce;
+    [Range(1, 100)] [SerializeField] private float dashSpeed;
     [SerializeField] private float _maxSpeed;
     [SerializeField] private float _jumpForce;
     [SerializeField] private int horizontalInput;
     [SerializeField] private bool space;
+    [SerializeField] private bool spaceDown;
     [SerializeField] private bool shift;
+    [SerializeField] private bool dash;
     [SerializeField] private float coyoteTimeCounter;
     [SerializeField] private float jumpBufferCounter;
+    [SerializeField] private float dashCooldown;
+    [SerializeField] private float dashes;
     [SerializeField] private Vector3 vel;
-    [Range(1, 10)] public float crouchJump;
-    [Range(1, 10)] public float crouchSpeed;
-    [Range(1, 10)] public float jumpSpeed;
-    [Range(1, 300)] public float accelSpeed;
-    [Range(1, 300)] public float decelSpeed;
-    [Range(.01f, 2)] public float coyoteAmount;
-    [Range(.01f, 2)] public float bufferAmount;
-    [Range(.01f, 2)] public float edgeAmount;
-    [Range(1, 20)] public float gravityWhenJumping;
+    [Range(1, 20)] [SerializeField] private float crouchJump;
+    [Range(1, 20)] [SerializeField] private float crouchSpeed;
+    [Range(1, 20)] [SerializeField] private float jumpSpeed;
+    [Range(1, 20)] [SerializeField] private float gravityWhenJumping;
+    [Range(1, 300)] [SerializeField] private float accelSpeed;
+    [Range(1, 300)] [SerializeField] private float decelSpeed;
+    [Range(.01f, 2)] [SerializeField] private float coyoteAmount;
+    [Range(.01f, 2)] [SerializeField] private float bufferAmount;
+    [Range(.01f, 2)] [SerializeField] private float edgeAmount;
+    [Range(.01f, 2)] [SerializeField] private float maxJumpTime;
+    [Range(.01f, 2)] [SerializeField] private float maxDashCooldown;
     [Header("ANIMATIONS")]
-    public GameObject idle;
-    public GameObject side;
-    public Animator animator;
+    [SerializeField] private GameObject idle;
+    [SerializeField] private GameObject side;
+    [SerializeField] private Animator animator;
     [Header("DEBUG")]
-    [SerializeField] private bool isDebugActive = false;
-    [SerializeField] public Color colliderColor = Color.blue;
-    [SerializeField] public Color jumpIndicatorColor = Color.yellow;
-    [SerializeField] public Color edgeColor = Color.blue;
+    public bool isDebugActive = false;
+    [SerializeField] private Color colliderColor = Color.blue;
+    [SerializeField] private Color jumpIndicatorColor = Color.yellow;
+    [SerializeField] private Color edgeColor = Color.blue;
     [SerializeField] private Color hassmthAboveColor;
     [SerializeField] private Color isGroundedColor;
-    [SerializeField] public KeyCode slowDownKey;
-    [SerializeField] public KeyCode debugModeKey;
+    [SerializeField] private KeyCode slowDownKey;
+    [SerializeField] private KeyCode debugModeKey;
     [SerializeField] private List<JumpIndicator> jumpIndicators = new List<JumpIndicator>();
 
 
@@ -65,6 +73,7 @@ public class PlayerMovement : MonoBehaviour
         Jump();
         Crouch();
         CheckVelocities();
+        Dash();
 
         Anims();
 
@@ -94,8 +103,10 @@ public class PlayerMovement : MonoBehaviour
     private void DefineKeys()
     {
         horizontalInput = (Input.GetKey(KeyCode.D) ? 1 : 0) - (Input.GetKey(KeyCode.A) ? 1 : 0);
-        space = Input.GetKeyDown(KeyCode.Space) ? true : false;
-        shift = Input.GetKey(KeyCode.LeftShift) ? true : false;
+        space = Input.GetKey(KeyCode.Space);
+        spaceDown = Input.GetKeyDown(KeyCode.Space);
+        shift = Input.GetKey(KeyCode.LeftShift);
+        dash = Input.GetKeyDown(KeyCode.Mouse1);
     }
 
     private void Move()
@@ -135,13 +146,23 @@ public class PlayerMovement : MonoBehaviour
     {
         if (jumpBufferCounter > 0 && coyoteTimeCounter > 0 && currentVerticalSpeed <= 0)
         {
+            StartJumping();
             jumpBufferCounter = 0;
-            rb.velocity = new Vector2(currentHorizontalSpeed, _jumpForce);
             coyoteTimeCounter = 0;
         }
 
         JumpBuffer();
         CoyoteTime();
+    }
+    private async void StartJumping()
+    {
+        float lastTime = Time.time;
+        while (space && lastTime + maxJumpTime > Time.time)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, _jumpForce);
+            await Task.Yield();
+        }
+
     }
     private void CoyoteTime()
     {
@@ -158,9 +179,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void JumpBuffer()
     {
-        jumpBufferCounter -= Time.deltaTime;
-        if (space) 
-            jumpBufferCounter = bufferAmount;
+        if (spaceDown) jumpBufferCounter = bufferAmount;
     }
 
     private void Crouch()
@@ -218,6 +237,33 @@ public class PlayerMovement : MonoBehaviour
                 transform.position = new Vector3(transform.position.x - .2f, transform.position.y, transform.position.z);
                 rb.velocity = vel;
             }
+        }
+    }
+
+    private void Dash()
+    {
+        bool isDashing = dash && dashes > 0;
+        Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        direction.Normalize();
+        if (isDashing)
+        {
+            rb.velocity += direction * dashSpeed;
+            dashes--;
+        }
+
+        RecoverDash();
+    }
+    private void RecoverDash()
+    {
+        if (dashes < 1)
+        {
+            if (dashCooldown <= 0 && isGrounded)
+            {
+                dashes++;
+                dashCooldown = maxDashCooldown * 5;
+            }
+            else
+                dashCooldown -= Time.deltaTime;
         }
     }
 
