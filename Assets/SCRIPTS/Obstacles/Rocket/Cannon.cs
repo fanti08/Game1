@@ -10,7 +10,7 @@ public class Cannon : MonoBehaviour
     [Range(0, 1)] [SerializeField] private float turnFactor;
     [SerializeField] private float cooldown;
     [SerializeField] private bool isActive;
-    [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private Player script_player;
 
     void Awake()
     {
@@ -25,8 +25,8 @@ public class Cannon : MonoBehaviour
         {
             Vector2 direction = (player.transform.position - transform.position).normalized;
             transform.up = Vector2.Lerp(transform.up, direction, turnFactor);
-            RaycastHit2D hit_up = Physics2D.Raycast(transform.position + (Vector3)(direction * minRadius) + .49f * transform.right, direction, maxRadius);
-            RaycastHit2D hit_down = Physics2D.Raycast(transform.position + (Vector3)(direction * minRadius) - .49f * transform.right, direction, maxRadius);
+            RaycastHit2D hit_up = Physics2D.Raycast(transform.position + (Vector3)(direction * minRadius) + .5f * transform.right, direction, maxRadius);
+            RaycastHit2D hit_down = Physics2D.Raycast(transform.position + (Vector3)(direction * minRadius) - .5f * transform.right, direction, maxRadius);
             if (hit_up.collider.gameObject.tag == "Player" && hit_down.collider.gameObject.tag == "Player") SpawnRocket();
         }
         cooldown -= Time.deltaTime;
@@ -34,7 +34,7 @@ public class Cannon : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if(playerMovement.isDebugActive)
+        if(script_player.isDebugActive)
         {
             Vector2 direction = (player.transform.position - transform.position).normalized;
             Gizmos.DrawLine(transform.position + (Vector3)(direction * minRadius) + .49f * transform.right, transform.position + (Vector3)(direction * maxRadius) + 0.25f * transform.right);

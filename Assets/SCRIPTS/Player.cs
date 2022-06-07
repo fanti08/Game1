@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
 {
     //VARIABLES
     [Header("MOVE")]
@@ -41,6 +42,16 @@ public class PlayerMovement : MonoBehaviour
     [Range(.01f, 2)] [SerializeField] private float edgeAmount;
     [Range(.01f, 2)] [SerializeField] private float maxJumpTime;
     [Range(.01f, 2)] [SerializeField] private float maxDashCooldown;
+    [Header("GRAB & PICKUP")]
+    [SerializeField] private float canGrabRadius;
+    [SerializeField] private Color canGrabColor;
+    [SerializeField] private Color cantGrabColor;
+    [SerializeField] private bool objectGrabbed;
+    [SerializeField] private Rigidbody2D grabbedObject;
+    [SerializeField] private float grabForce;
+    [SerializeField] private float grabbedObjectDrag;
+    [SerializeField] private string draggable;
+    [SerializeField] private bool drag;
     [Header("ANIMATIONS")]
     [SerializeField] private GameObject idle;
     [SerializeField] private GameObject side;
@@ -75,6 +86,8 @@ public class PlayerMovement : MonoBehaviour
         CheckVelocities();
         Dash();
 
+        DragObjects();
+
         Anims();
 
         Debug();
@@ -106,14 +119,19 @@ public class PlayerMovement : MonoBehaviour
         space = Input.GetKey(KeyCode.Space);
         spaceDown = Input.GetKeyDown(KeyCode.Space);
         shift = Input.GetKey(KeyCode.LeftShift);
-        dash = Input.GetKeyDown(KeyCode.Mouse1);
+        dash = Input.GetKey(KeyCode.Mouse1);
+        drag = Input.GetKey(KeyCode.Mouse0);
     }
 
     private void Move()
     {
-        if (horizontalInput == 0) 
-            Decelerate();
-        else Accelerate();
+        if (!dash)
+        {
+            if (horizontalInput == 0)
+                Decelerate();
+            else 
+                Accelerate();
+        }
     }
     private void Accelerate()
     {
@@ -179,7 +197,8 @@ public class PlayerMovement : MonoBehaviour
     }
     private void JumpBuffer()
     {
-        if (spaceDown) jumpBufferCounter = bufferAmount;
+        if (spaceDown) 
+            jumpBufferCounter = bufferAmount;
     }
 
     private void Crouch()
@@ -268,6 +287,80 @@ public class PlayerMovement : MonoBehaviour
     }
 
     #endregion MOVE
+
+    #region DRAG & PICKUP
+
+    private void DragObjects()
+    {
+        RaycastHit2D[] canGrabHits = Physics2D.CircleCastAll(transform.position, canGrabRadius, Vector2.zero, 0);
+        GameObject[] draggables = GameObject.FindGameObjectsWithTag(draggable);
+        for (int i = 0; i < draggables.Length; i++)
+            draggables[i].GetComponent<SpriteRenderer>().color = cantGrabColor;
+        for (int i = 0; i < canGrabHits.Length; i++)
+        {
+            if (canGrabHits[i].collider.CompareTag(draggable))
+            {
+                Transform draggableObj = canGrabHits[i].transform;
+                SpriteRenderer sprite = draggableObj.GetComponent<SpriteRenderer>();
+
+                sprite.color = canGrabColor;
+            }
+        }
+        Rigidbody2D[] canGrabObjects = canGrabHits.Select(i => i.collider.GetComponent<Rigidbody2D>()).ToArray();
+
+        if (drag)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition).origin, Camera.main.ScreenPointToRay(Input.mousePosition).direction, Mathf.Infinity);
+            if (hit.collider.CompareTag(draggable))
+            {
+                grabbedObject = hit.collider.GetComponent<Rigidbody2D>();
+                if (!canGrabObjects.Contains(grabbedObject)) 
+                    return;
+                grabbedObject.drag = grabbedObjectDrag;
+                grabbedObject.gravityScale = 0;
+                objectGrabbed = true;
+            }
+        }
+        if (!objectGrabbed) 
+            return;
+        if (drag)
+        {
+            Vector2 targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 dir = targetPos - grabbedObject.position;
+            grabbedObject.AddForce(dir * grabForce * Time.deltaTime * Vector2.Distance(targetPos, grabbedObject.position));
+        }
+        if (grabbedObject != null && Input.GetMouseButtonUp(0))
+        {
+            grabbedObject.drag = 0;
+            grabbedObject.gravityScale = 3;
+            grabbedObject = null;
+            objectGrabbed = false;
+        }
+    }
+
+    /*/public List<GameObject> pickups;
+    public int maxPickups;
+    public KeyCode pickupKey;
+
+    void Awake()
+    {
+        pickups = new List<GameObject>();
+    }
+
+    void OnTriggerStay2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Pickup")
+        {
+            if (Input.GetKeyDown(pickupKey) && pickups.Count < maxPickups)
+            {
+                pickups.Add(col.gameObject);
+                col.gameObject.transform.SetParent(transform);
+                col.gameObject.SetActive(false);
+            }
+        }
+    }/*/
+
+    #endregion DRAG & PICKUP
 
     #region ANIMATIONS
 
