@@ -2,16 +2,18 @@ using UnityEngine;
 
 public class Rocket : MonoBehaviour
 {
-    public GameObject player;
-    public Rigidbody2D rb;
-    public float flySpeed;
-    public float directionLerp;
-    public int damage;
-    private Vector2 _direction;
+    [SerializeField] private GameObject player;
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private float flySpeed;
+    [SerializeField] private float directionLerp;
+    [SerializeField] private int damage;
+    [SerializeField] private Vector2 _direction;
+    [SerializeField] private Player script_player;
 
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        script_player = player.GetComponent<Player>();
     }
 
     void FixedUpdate()
@@ -24,6 +26,8 @@ public class Rocket : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
+        if (col.gameObject.CompareTag("Player"))
+            script_player.isDead = true;
         Destroy(gameObject);
     }
 }

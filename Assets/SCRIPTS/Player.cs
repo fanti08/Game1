@@ -6,6 +6,14 @@ using System.Linq;
 public class Player : MonoBehaviour
 {
     //VARIABLES
+    public bool isDead;
+    [Header("Keys")]
+    [SerializeField] private KeyCode KEY_Drag = KeyCode.Mouse0;
+    [SerializeField] private KeyCode KEY_Left = KeyCode.A;
+    [SerializeField] private KeyCode KEY_Right = KeyCode.D;
+    [SerializeField] private KeyCode KEY_Jump = KeyCode.Space;
+    [SerializeField] private KeyCode KEY_Crouch = KeyCode.LeftShift;
+    [SerializeField] private KeyCode KEY_Dash = KeyCode.Mouse1;
     [Header("MOVE")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private BoxCollider2D bc;
@@ -24,12 +32,9 @@ public class Player : MonoBehaviour
     [SerializeField] private int horizontalInput;
     [SerializeField] private bool space;
     [SerializeField] private bool spaceDown;
-    [SerializeField] private bool shift;
-    [SerializeField] private bool dash;
+    [SerializeField] private bool crouch;
     [SerializeField] private float coyoteTimeCounter;
     [SerializeField] private float jumpBufferCounter;
-    [SerializeField] private float dashCooldown;
-    [SerializeField] private float dashes;
     [SerializeField] private Vector3 vel;
     [Range(1, 20)] [SerializeField] private float crouchJump;
     [Range(1, 20)] [SerializeField] private float crouchSpeed;
@@ -41,8 +46,15 @@ public class Player : MonoBehaviour
     [Range(.01f, 2)] [SerializeField] private float bufferAmount;
     [Range(.01f, 2)] [SerializeField] private float edgeAmount;
     [Range(.01f, 2)] [SerializeField] private float maxJumpTime;
-    [Range(.01f, 2)] [SerializeField] private float maxDashCooldown;
+    [Range(.01f, 2)] [SerializeField] private float dashCooldown;
+    [SerializeField] private bool isDashing;
+    [SerializeField] private int dashesCount;
+    [SerializeField] private float dashDuration;
+    [SerializeField] private float dashStartTime;
+    [SerializeField] private Vector2 dashVel;
+    [SerializeField] private float lastDashCooldownTime;
     [Header("GRAB & PICKUP")]
+    [SerializeField] private BoxCollider2D stopper;
     [SerializeField] private float canGrabRadius;
     [SerializeField] private Color canGrabColor;
     [SerializeField] private Color cantGrabColor;
@@ -51,7 +63,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float grabForce;
     [SerializeField] private float grabbedObjectDrag;
     [SerializeField] private string draggable;
-    [SerializeField] private bool drag;
+    [SerializeField] private string draggablecoll;
+    [SerializeField] private List<GameObject> pickups;
+    [SerializeField] private int maxPickups;
+    [SerializeField] private string pickupable;
     [Header("ANIMATIONS")]
     [SerializeField] private GameObject idle;
     [SerializeField] private GameObject side;
@@ -69,15 +84,10 @@ public class Player : MonoBehaviour
 
 
     //VOIDS
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        bc = GetComponent<BoxCollider2D>();
-        ground = LayerMask.GetMask("Ground");
-    }
-
     private void Update()
     {
+        print(isDead);
+
         DefineSpeeds();
         DefineKeys();
         Move();
@@ -106,7 +116,7 @@ public class Player : MonoBehaviour
         currentHorizontalSpeed = rb.velocity.x;
         currentVerticalSpeed = rb.velocity.y;
         isGrounded = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size, 0, Vector2.down, .1f, ground);
-        isShifting = shift || (hasSmthAboveHead && bc.size == new Vector2(6, 7.5f));
+        isShifting = crouch || (hasSmthAboveHead && bc.size == new Vector2(6, 7.5f));
         if (currentHorizontalSpeed > .01f) 
             wasGoingRight = true;
         if (currentHorizontalSpeed < -.01f) 
@@ -115,23 +125,18 @@ public class Player : MonoBehaviour
     }
     private void DefineKeys()
     {
-        horizontalInput = (Input.GetKey(KeyCode.D) ? 1 : 0) - (Input.GetKey(KeyCode.A) ? 1 : 0);
-        space = Input.GetKey(KeyCode.Space);
-        spaceDown = Input.GetKeyDown(KeyCode.Space);
-        shift = Input.GetKey(KeyCode.LeftShift);
-        dash = Input.GetKey(KeyCode.Mouse1);
-        drag = Input.GetKey(KeyCode.Mouse0);
+        horizontalInput = (Input.GetKey(KEY_Right) ? 1 : 0) - (Input.GetKey(KEY_Left) ? 1 : 0);
+        space = Input.GetKey(KEY_Jump);
+        spaceDown = Input.GetKeyDown(KEY_Jump);
+        crouch = Input.GetKey(KEY_Crouch);
     }
 
     private void Move()
     {
-        if (!dash)
-        {
-            if (horizontalInput == 0)
-                Decelerate();
-            else 
-                Accelerate();
-        }
+        if (horizontalInput == 0)
+            Decelerate();
+        else
+            Accelerate();
     }
     private void Accelerate()
     {
@@ -215,6 +220,9 @@ public class Player : MonoBehaviour
             bc.offset = new Vector2(0, 0);
             _jumpForce = jumpForce;
         }
+        
+        stopper.offset = bc.offset;
+        stopper.size = new Vector2(bc.size.x - .01f, bc.size.y - .01f);
     }
 
     private void CheckVelocities()
@@ -261,30 +269,38 @@ public class Player : MonoBehaviour
 
     private void Dash()
     {
-        bool isDashing = dash && dashes > 0;
-        Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        direction.Normalize();
+        Vector2 dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        dir.Normalize();
+        if (Input.GetKeyDown(KEY_Dash) && dashesCount > 0)
+        {
+            dashVel = dashSpeed * dir;
+            isDashing = true;
+            dashesCount--;
+            dashStartTime = Time.time;
+        }
         if (isDashing)
         {
-            rb.velocity += direction * dashSpeed;
-            dashes--;
+            if (dashStartTime + dashDuration < Time.time)
+            {
+                isDashing = false;
+                dashesCount--;
+            }
+            else
+                rb.velocity = dashVel;
         }
-
         RecoverDash();
     }
     private void RecoverDash()
     {
-        if (dashes < 1)
+        if (dashesCount < 1 && lastDashCooldownTime + dashCooldown < Time.time && isGrounded)
         {
-            if (dashCooldown <= 0 && isGrounded)
-            {
-                dashes++;
-                dashCooldown = maxDashCooldown * 5;
-            }
-            else
-                dashCooldown -= Time.deltaTime;
+            dashesCount++;
+            lastDashCooldownTime = Time.time;
         }
+        if (isGrounded)
+            dashesCount = 1;
     }
+
 
     #endregion MOVE
 
@@ -295,27 +311,28 @@ public class Player : MonoBehaviour
         RaycastHit2D[] canGrabHits = Physics2D.CircleCastAll(transform.position, canGrabRadius, Vector2.zero, 0);
         GameObject[] draggables = GameObject.FindGameObjectsWithTag(draggable);
         for (int i = 0; i < draggables.Length; i++)
-            draggables[i].GetComponent<SpriteRenderer>().color = cantGrabColor;
+            draggables[i].GetComponentInParent<SpriteRenderer>().color = cantGrabColor;
         for (int i = 0; i < canGrabHits.Length; i++)
         {
             if (canGrabHits[i].collider.CompareTag(draggable))
             {
                 Transform draggableObj = canGrabHits[i].transform;
-                SpriteRenderer sprite = draggableObj.GetComponent<SpriteRenderer>();
+                SpriteRenderer sprite = draggableObj.GetComponentInParent<SpriteRenderer>();
 
                 sprite.color = canGrabColor;
             }
         }
         Rigidbody2D[] canGrabObjects = canGrabHits.Select(i => i.collider.GetComponent<Rigidbody2D>()).ToArray();
 
-        if (drag)
+        if (Input.GetKeyDown(KEY_Drag))
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition).origin, Camera.main.ScreenPointToRay(Input.mousePosition).direction, Mathf.Infinity);
+            if (hit.collider == null) 
+                return;
             if (hit.collider.CompareTag(draggable))
             {
-                grabbedObject = hit.collider.GetComponent<Rigidbody2D>();
-                if (!canGrabObjects.Contains(grabbedObject)) 
-                    return;
+                grabbedObject = hit.collider.GetComponentInParent<Rigidbody2D>();
+                if (!canGrabObjects.Contains(grabbedObject)) return;
                 grabbedObject.drag = grabbedObjectDrag;
                 grabbedObject.gravityScale = 0;
                 objectGrabbed = true;
@@ -323,42 +340,29 @@ public class Player : MonoBehaviour
         }
         if (!objectGrabbed) 
             return;
-        if (drag)
+        if (Input.GetKey(KEY_Drag))
         {
             Vector2 targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 dir = targetPos - grabbedObject.position;
             grabbedObject.AddForce(dir * grabForce * Time.deltaTime * Vector2.Distance(targetPos, grabbedObject.position));
         }
-        if (grabbedObject != null && Input.GetMouseButtonUp(0))
+        if (grabbedObject != null && Input.GetKeyUp(KEY_Drag))
         {
             grabbedObject.drag = 0;
-            grabbedObject.gravityScale = 3;
+            grabbedObject.gravityScale = 6;
             grabbedObject = null;
             objectGrabbed = false;
         }
     }
 
-    /*/public List<GameObject> pickups;
-    public int maxPickups;
-    public KeyCode pickupKey;
-
-    void Awake()
-    {
-        pickups = new List<GameObject>();
-    }
-
     void OnTriggerStay2D(Collider2D col)
     {
-        if (col.gameObject.tag == "Pickup")
+        if (col.gameObject.CompareTag(pickupable) && pickups.Count < maxPickups)
         {
-            if (Input.GetKeyDown(pickupKey) && pickups.Count < maxPickups)
-            {
-                pickups.Add(col.gameObject);
-                col.gameObject.transform.SetParent(transform);
-                col.gameObject.SetActive(false);
-            }
+            pickups.Add(col.gameObject);
+            Destroy(col.gameObject);
         }
-    }/*/
+    }
 
     #endregion DRAG & PICKUP
 
