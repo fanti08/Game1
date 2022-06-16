@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
 
 public class Player : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class Player : MonoBehaviour
     [SerializeField] private KeyCode KEY_Right = KeyCode.D;
     [SerializeField] private KeyCode KEY_Jump = KeyCode.Space;
     [SerializeField] private KeyCode KEY_Crouch = KeyCode.LeftShift;
-    [SerializeField] private KeyCode KEY_Dash = KeyCode.Mouse1;
+    [SerializeField] private KeyCode KEY_Dash = KeyCode.W;
     [Header("MOVE")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private BoxCollider2D bc;
@@ -41,7 +42,7 @@ public class Player : MonoBehaviour
     [Range(1, 20)] [SerializeField] private float jumpSpeed;
     [Range(1, 20)] [SerializeField] private float gravityWhenJumping;
     [Range(1, 300)] [SerializeField] private float accelSpeed;
-    [Range(1, 300)] [SerializeField] private float decelSpeed;
+    [Range(.01f, 2)] [SerializeField] private float decelSpeed;
     [Range(.01f, 2)] [SerializeField] private float coyoteAmount;
     [Range(.01f, 2)] [SerializeField] private float bufferAmount;
     [Range(.01f, 2)] [SerializeField] private float edgeAmount;
@@ -68,8 +69,6 @@ public class Player : MonoBehaviour
     [SerializeField] private int maxPickups;
     [SerializeField] private string pickupable;
     [Header("ANIMATIONS")]
-    [SerializeField] private GameObject idle;
-    [SerializeField] private GameObject side;
     [SerializeField] private Animator animator;
     [Header("DEBUG")]
     public bool isDebugActive = false;
@@ -78,7 +77,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Color edgeColor = Color.blue;
     [SerializeField] private Color hassmthAboveColor;
     [SerializeField] private Color isGroundedColor;
-    [SerializeField] private KeyCode slowDownKey;
+    public KeyCode slowDownKey;
     [SerializeField] private KeyCode debugModeKey;
     [SerializeField] private List<JumpIndicator> jumpIndicators = new List<JumpIndicator>();
 
@@ -86,7 +85,7 @@ public class Player : MonoBehaviour
     //VOIDS
     private void Update()
     {
-        print(isDead);
+        DeadCheck();
 
         DefineSpeeds();
         DefineKeys();
@@ -100,7 +99,7 @@ public class Player : MonoBehaviour
 
         Anims();
 
-        Debug();
+        DebugMode();
     }
 
     private void FixedUpdate()
@@ -108,6 +107,15 @@ public class Player : MonoBehaviour
         EdgeCorrection();
     }
 
+    #region DEAD
+
+    private void DeadCheck()
+    {
+        //print(isDead);
+        //add here
+    }
+
+    #endregion DEAD
 
     #region MOVE
 
@@ -125,10 +133,13 @@ public class Player : MonoBehaviour
     }
     private void DefineKeys()
     {
-        horizontalInput = (Input.GetKey(KEY_Right) ? 1 : 0) - (Input.GetKey(KEY_Left) ? 1 : 0);
-        space = Input.GetKey(KEY_Jump);
-        spaceDown = Input.GetKeyDown(KEY_Jump);
-        crouch = Input.GetKey(KEY_Crouch);
+        if (Time.timeScale != 0)
+        {
+            horizontalInput = (Input.GetKey(KEY_Right) ? 1 : 0) - (Input.GetKey(KEY_Left) ? 1 : 0);
+            space = Input.GetKey(KEY_Jump);
+            spaceDown = Input.GetKeyDown(KEY_Jump);
+            crouch = Input.GetKey(KEY_Crouch);
+        }
     }
 
     private void Move()
@@ -146,19 +157,14 @@ public class Player : MonoBehaviour
         else 
             xVelToAdd = Time.deltaTime * accelSpeed * horizontalInput;
         Vector2 speedToAccel = new Vector2(rb.velocity.x + xVelToAdd, currentVerticalSpeed);
-        if (Mathf.Abs(currentHorizontalSpeed) < _maxSpeed) 
+        if (Mathf.Abs(currentHorizontalSpeed) < _maxSpeed + 0.3f) 
             rb.velocity = speedToAccel;
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -_maxSpeed, _maxSpeed), currentVerticalSpeed);
     }
     private void Decelerate()
     {
-        int xDir = wasGoingRight ? 1 : -1;
-        float xVelToReduce;
-        if (!isGrounded) 
-            xVelToReduce = Time.deltaTime * decelSpeed * xDir / 1.5f;
-        else 
-            xVelToReduce = Time.deltaTime * decelSpeed * xDir;
-        Vector2 speedToDecel = new Vector2(rb.velocity.x - xVelToReduce, currentVerticalSpeed);
+        float xVelToReduce = isGrounded ? 1 : 1.5f;
+        Vector2 speedToDecel = new Vector2(rb.velocity.x * decelSpeed / xVelToReduce, currentVerticalSpeed);
         if (Mathf.Abs(currentHorizontalSpeed) > 0) 
             rb.velocity = speedToDecel;
         if (Mathf.Abs(currentHorizontalSpeed) < .05f) 
@@ -210,13 +216,13 @@ public class Player : MonoBehaviour
     {
         if (isShifting)
         { 
-            bc.size = new Vector2(6, 7.5f);
+            bc.size = new Vector2(9, 7.5f);
             bc.offset = new Vector2(0, -3.725f);
             _jumpForce = jumpForce / crouchJump;
         }
         else
         {
-            bc.size = new Vector2(6, 15);
+            bc.size = new Vector2(9, 15);
             bc.offset = new Vector2(0, 0);
             _jumpForce = jumpForce;
         }
@@ -240,8 +246,8 @@ public class Player : MonoBehaviour
     private void EdgeCorrection()
     {
         Vector3 offset = new Vector3(bc.offset.x, bc.offset.y, transform.position.z) / 5;
-        Vector3 ROrigin = offset + transform.position + new Vector3(bc.size.x / 10 + .05f, (bc.size.y / 10) + 0.25f, transform.position.z);
-        Vector3 LOrigin = offset + transform.position + new Vector3(-bc.size.x / 10 - .05f, (bc.size.y / 10) + 0.25f, transform.position.z);
+        Vector3 ROrigin = offset + transform.position + new Vector3(bc.size.x / 10 + .05f, bc.size.y / 10 + 0.25f, transform.position.z);
+        Vector3 LOrigin = offset + transform.position + new Vector3(-bc.size.x / 10 - .05f, bc.size.y / 10 + 0.25f, transform.position.z);
 
         Vector2 RDir = Vector2.left;
         Vector2 LDir = Vector2.right;
@@ -250,16 +256,24 @@ public class Player : MonoBehaviour
         RaycastHit2D Rhit = Physics2D.Raycast(ROrigin, RDir, dist, ground);
         RaycastHit2D Lhit = Physics2D.Raycast(LOrigin, LDir, dist, ground);
 
-        if (Lhit.collider == null && Rhit.collider == null) 
+        Vector3 point1 = new Vector3(transform.position.x - .2f - bc.bounds.size.x / 2, transform.position.y - bc.bounds.size.y / 2 + .1f, transform.position.z) + offset;
+        Vector3 point2 = new Vector3(transform.position.x + .2f + bc.bounds.size.x / 2, transform.position.y - bc.bounds.size.y / 2 + .1f, transform.position.z) + offset;
+        Vector3 point3 = new Vector3(point1.x, bc.bounds.size.y / 2 + transform.position.y, transform.position.z) + offset;
+        Vector3 point4 = new Vector3(point2.x, bc.bounds.size.y / 2 + transform.position.y, transform.position.z) + offset;
+
+        RaycastHit2D Lray = Physics2D.Linecast(point1, point3, ground);
+        RaycastHit2D Rray = Physics2D.Linecast(point2, point4, ground);
+
+        if (Lhit.collider == null && Rhit.collider == null)
             vel = rb.velocity;
         if (!isGrounded && vel.y > .01f)
         {
-            if (Lhit.collider != null && Rhit.collider == null && vel.x > -.3f)
+            if (Lhit.collider != null && Rhit.collider == null && vel.x > -.3f && Rray.collider == null)
             {
                 transform.position = new Vector3(transform.position.x + 0.2f, transform.position.y, transform.position.z);
                 rb.velocity = vel;
             }
-            else if (Lhit.collider == null && Rhit.collider != null && vel.x < .3f)
+            else if (Lhit.collider == null && Rhit.collider != null && vel.x < .3f && Lray.collider == null)
             {
                 transform.position = new Vector3(transform.position.x - .2f, transform.position.y, transform.position.z);
                 rb.velocity = vel;
@@ -275,7 +289,7 @@ public class Player : MonoBehaviour
         {
             dashVel = dashSpeed * dir;
             isDashing = true;
-            dashesCount--;
+            dashesCount = 0;
             dashStartTime = Time.time;
         }
         if (isDashing)
@@ -283,22 +297,21 @@ public class Player : MonoBehaviour
             if (dashStartTime + dashDuration < Time.time)
             {
                 isDashing = false;
-                dashesCount--;
+                dashesCount = 0;
             }
             else
                 rb.velocity = dashVel;
         }
+
         RecoverDash();
     }
     private void RecoverDash()
     {
         if (dashesCount < 1 && lastDashCooldownTime + dashCooldown < Time.time && isGrounded)
         {
-            dashesCount++;
+            dashesCount = 1;
             lastDashCooldownTime = Time.time;
         }
-        if (isGrounded)
-            dashesCount = 1;
     }
 
 
@@ -332,7 +345,8 @@ public class Player : MonoBehaviour
             if (hit.collider.CompareTag(draggable))
             {
                 grabbedObject = hit.collider.GetComponentInParent<Rigidbody2D>();
-                if (!canGrabObjects.Contains(grabbedObject)) return;
+                if (!canGrabObjects.Contains(grabbedObject)) 
+                    return;
                 grabbedObject.drag = grabbedObjectDrag;
                 grabbedObject.gravityScale = 0;
                 objectGrabbed = true;
@@ -394,19 +408,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Debug()
+    private void DebugMode()
     {
         if (Input.GetKeyDown(debugModeKey)) 
             isDebugActive = !isDebugActive;
-        if (!isDebugActive) 
-            Time.timeScale = 1;
 
         if (isDebugActive)
-        {
-            if (Input.GetKey(slowDownKey)) Time.timeScale = 0.25f;
-            else Time.timeScale = 1;
             print("HORIZONTAL VELOCITY = " + ((float)Mathf.Round(rb.velocity.x * 100) / 100).ToString() + "VERTICAL VELOCITY = " + ((float)Mathf.Round(rb.velocity.y * 100) / 100).ToString());
-        }
 
         if (Input.GetKeyDown(KeyCode.Space)) 
             jumpIndicators.Add(new JumpIndicator(bc.bounds.center + Vector3.down * (bc.bounds.size.y / 2), 5));
@@ -441,6 +449,14 @@ public class Player : MonoBehaviour
             Gizmos.color = edgeColor;
             Gizmos.DrawRay(ROrigin, RDir * edgeAmount);
             Gizmos.DrawRay(LOrigin, LDir * edgeAmount);
+
+            Vector3 point1 = new Vector3(transform.position.x - .2f - bc.bounds.size.x / 2, transform.position.y - bc.bounds.size.y / 2, transform.position.z) + offset;
+            Vector3 point2 = new Vector3(transform.position.x + .2f + bc.bounds.size.x / 2, transform.position.y - bc.bounds.size.y / 2, transform.position.z) + offset;
+            Vector3 point3 = new Vector3(point1.x, bc.bounds.size.y / 2 + transform.position.y, transform.position.z) + offset;
+            Vector3 point4 = new Vector3(point2.x, bc.bounds.size.y / 2 + transform.position.y, transform.position.z) + offset;
+
+            Gizmos.DrawLine(point1, point3);
+            Gizmos.DrawLine(point2, point4);
 
             Gizmos.color = jumpIndicatorColor;
             for (int i = 0; i < jumpIndicators.Count; i++)

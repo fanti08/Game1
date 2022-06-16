@@ -10,21 +10,25 @@ public class FallingPlatform : MonoBehaviour
     [SerializeField] private Color enableColor;
     [SerializeField] private SpriteRenderer sprite;
     [SerializeField] private Collider2D coll;
+    [SerializeField] private Collider2D F_coll;
 
     private void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
         sprite.color = enableColor;
         coll = GetComponent<Collider2D>();
+        F_coll = transform.GetChild(0).GetComponent<Collider2D>();
     }
 
     private async void OnCollisionEnter2D(Collision2D collision)
     {
         await Task.Delay(TimeSpan.FromSeconds(fallDelayTime));
         coll.enabled = false;
+        F_coll.enabled = false;
         sprite.color = disableColor;
         await Task.Delay(TimeSpan.FromSeconds(cooldownTime));
         coll.enabled = true;
+        F_coll.enabled = true;
         sprite.color = enableColor;
     }
 }
