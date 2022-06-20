@@ -7723,7 +7723,7 @@ MonoBehaviour:
   hasSmthAboveHead: 0
   maxSpeed: 22
   jumpForce: 25
-  dashSpeed: 40
+  dashSpeed: 35
   _maxSpeed: 0
   _jumpForce: 0
   multiplier: 1
