@@ -73,6 +73,7 @@ public class Player : MonoBehaviour
     [SerializeField] private string pickupable;
     [Header("ANIMATIONS")]
     [SerializeField] private Animator animator;
+    [SerializeField] private bool isFacingRight = true;
     [Header("DEBUG")]
     public bool isDebugActive = false;
     [SerializeField] private Color colliderColor = Color.blue;
@@ -398,13 +399,29 @@ public class Player : MonoBehaviour
 
     private void Anims()
     {
-        if (horizontalInput == 0) 
-            animator.SetInteger("direction", 0);
-        else 
-            animator.SetInteger("direction", horizontalInput);
-        if (jumpBufferCounter > 0 && coyoteTimeCounter > 0 && currentVerticalSpeed <= 0) 
-            animator.SetTrigger("jump");
+        animator.SetFloat("direction", Mathf.Abs(horizontalInput));
+        animator.SetBool("isCroutching", crouch);
+        animator.SetFloat("yVelocity", currentVerticalSpeed);
         animator.SetBool("inair", !isGrounded);
+
+        if (horizontalInput < 0 && isFacingRight)
+        {
+            transform.Rotate(0, 180, 0);
+            isFacingRight = false;
+        }
+
+        if (horizontalInput > 0f && !isFacingRight)
+        {
+            transform.Rotate(0, 180, 0);
+            isFacingRight = true;
+
+        }
+
+        if (horizontalInput == 0)
+            animator.SetFloat("direction", Mathf.Abs(0));
+
+        if (isGrounded) 
+            animator.SetBool("jump", false); 
     }
 
     #endregion ANIMATIONS

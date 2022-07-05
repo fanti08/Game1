@@ -48,7 +48,7 @@ MonoBehaviour:
   movePoints:
   - {fileID: 7332651095172772802}
   - {fileID: 7332651096414541339}
-  speed: 0.4
+  speed: 0.25
   move: 1
   time: 0
   loop: 0
