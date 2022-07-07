@@ -9340,6 +9340,7 @@ MonoBehaviour:
   maxPickups: 100
   pickupable: PickUppable
   animator: {fileID: 3435748989293655876}
+  isFacingRight: 1
   isDebugActive: 0
   colliderColor: {r: 0, g: 0, b: 1, a: 0.31764707}
   jumpIndicatorColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
@@ -13007,7 +13008,7 @@ Animator:
   m_GameObject: {fileID: 3435748989293655872}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0a4b9b43edc4d3f429d37b3763a06440, type: 2}
+  m_Controller: {fileID: 9100000, guid: 17f0962ada84d0e4bb832f0994676db0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

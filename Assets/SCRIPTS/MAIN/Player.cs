@@ -173,6 +173,8 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
+        animator.SetBool("jump", true);
+
         if (jumpBufferCounter > 0 && coyoteTimeCounter > 0 && currentVerticalSpeed <= 0)
         {
             StartJumping();
@@ -400,9 +402,9 @@ public class Player : MonoBehaviour
     private void Anims()
     {
         animator.SetFloat("direction", Mathf.Abs(horizontalInput));
-        animator.SetBool("isCroutching", crouch);
+        animator.SetBool("isCrouching", crouch);
         animator.SetFloat("yVelocity", currentVerticalSpeed);
-        animator.SetBool("inair", !isGrounded);
+        animator.SetBool("inAir", !isGrounded);
 
         if (horizontalInput < 0 && isFacingRight)
         {
